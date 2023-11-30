@@ -20,6 +20,7 @@ set(SOURCES_FILES_TESTS
 set(EXEC_TEST ${PROJECT_ID}__test)
 add_executable(${EXEC_TEST} ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
 
+
 set(GTEST_ROOT ../googletest-master)
 target_include_directories(${EXEC_TEST} PUBLIC
         ${GTEST_ROOT}/googlemock/include
@@ -29,3 +30,4 @@ target_include_directories(${EXEC_TEST} PUBLIC
 add_subdirectory(${GTEST_ROOT} googletest-master)
 
 target_link_libraries(${EXEC_TEST} gmock)
+
