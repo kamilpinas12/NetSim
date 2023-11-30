@@ -1,4 +1,18 @@
 "C:\Program Files\JetBrains\CLion 2022.3.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.3.2/bin/ninja/win/x64/ninja.exe" -G Ninja -S C:\Users\kamil\OneDrive\Documents\Studia\ZPO\lab_netsim -B C:\Users\kamil\OneDrive\Documents\Studia\ZPO\lab_netsim\cmake-build-debug
--- Configuring done
--- Generating done
--- Build files have been written to: C:/Users/kamil/OneDrive/Documents/Studia/ZPO/lab_netsim/cmake-build-debug
+CMake Error at CMakeLists.txt:10 (target_include_directories):
+  Cannot specify include directories for target "PUBLIC" which is not built
+  by this project.
+
+
+CMake Error at CMakeLists.txt:15 (add_subdirectory):
+  add_subdirectory given source "../googletest-master" which is not an
+  existing directory.
+
+
+CMake Error at CMakeLists.txt:17 (target_link_libraries):
+  Cannot specify link libraries for target "gmock" which is not built by this
+  project.
+
+
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/kamil/OneDrive/Documents/Studia/ZPO/lab_netsim/cmake-build-debug/CMakeFiles/CMakeOutput.log".
