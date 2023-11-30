@@ -1,0 +1,12 @@
+//
+// Created by kamil on 30/11/2023.
+//
+
+#ifndef LAB_NETSIM_STORAGE_TYPES_HPP
+#define LAB_NETSIM_STORAGE_TYPES_HPP
+
+
+
+
+
+#endif //LAB_NETSIM_STORAGE_TYPES_HPP

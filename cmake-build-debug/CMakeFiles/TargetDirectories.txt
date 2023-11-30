@@ -1,0 +1,3 @@
+C:/Users/kamil/OneDrive/Documents/Studia/ZPO/lab_netsim/cmake-build-debug/CMakeFiles/lab_netsim.dir
+C:/Users/kamil/OneDrive/Documents/Studia/ZPO/lab_netsim/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/kamil/OneDrive/Documents/Studia/ZPO/lab_netsim/cmake-build-debug/CMakeFiles/rebuild_cache.dir
