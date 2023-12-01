@@ -16,5 +16,5 @@ Package &Package::operator=(Package &&package) {
 
 
 Package::~Package() {
-    //TODO: Stworzyć destruktor
+    //TODO: Destruktor przenoszący z assigned_IDs do freed_IDs
 }
