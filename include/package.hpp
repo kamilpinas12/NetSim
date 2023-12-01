@@ -16,7 +16,7 @@ public:
     Package(ElementID);
     Package(Package&&);
 
-    Package& operator=(Package&&);
+    Package& operator=(Package &&package);
 
     ElementID get_id() const;
     ~Package();
