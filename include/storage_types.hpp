@@ -19,6 +19,7 @@ public:
     virtual bool empty() = 0;
     virtual  std::size_t size() = 0;
     virtual ~IPackageStockpile() = 0;
+    //TODO: Napisać konstruktory tej klasy
 
 };
 
@@ -33,7 +34,7 @@ public:
 
 class PackageQueue: public IPackageQueue{
 public:
-    //TODO: Zaimplementować metody tej klasy
+    //TODO: Zaimplementować metody, zmienne itp. tej klasy
 
 
 };

@@ -10,23 +10,8 @@ Package::Package() {
 }
 
 
-Package::Package(ElementID) {
-    //TODO: kontynuacja bajki LIFO FIFO
-}
-
-
-Package::Package(Package &&) {
-    //TODO: ten konstruktor nie wiem po co
-}
-
-
 Package &Package::operator=(Package &&package) {
     //TODO: Nie mam pojęcia co to kurna jest ale trzeba to napisac
-}
-
-
-ElementID Package::get_id() const {
-    //TODO: Napisać metoda get_id
 }
 
 
