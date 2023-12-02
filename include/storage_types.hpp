@@ -5,7 +5,10 @@
 #ifndef LAB_NETSIM_STORAGE_TYPES_HPP
 #define LAB_NETSIM_STORAGE_TYPES_HPP
 
+
+#include <list>
 #include "package.hpp"
+
 
 enum PackageQueueType{
     FIFO,
@@ -19,7 +22,17 @@ public:
     virtual bool empty() = 0;
     virtual  std::size_t size() = 0;
     virtual ~IPackageStockpile() = 0;
+    using const_iterator = std::list<Package>::const_iterator;
     //TODO: Napisać konstruktory tej klasy
+
+    //iteratory  (nie jestem pewien czy o to chodzi)
+    const_iterator begin() const {return queue.cbegin();}
+    const_iterator cbegin() const {return queue.cbegin();}
+    const_iterator end() const {return queue.end();}
+    const_iterator cend() const {return queue.cend();}
+
+private:
+    std::list<Package> queue;
 
 };
 
