@@ -29,7 +29,7 @@ Package::Package() {
 
 Package &Package::operator=(Package &&package) {
     //TODO: Nie mam pojęcia co to kurna jest ale trzeba to napisac
-    //nie jestem pewien czy dobrze rozumiem co ma robić to coś
+
 
 }
 
