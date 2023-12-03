@@ -27,9 +27,9 @@ public:
 
     //iteratory  (nie jestem pewien czy o to chodzi)
     const_iterator begin() const {return queue.cbegin();}
-    const_iterator cbegin() const {return queue.cbegin();}
+    const_iterator cbegin() {return queue.cbegin();}
     const_iterator end() const {return queue.end();}
-    const_iterator cend() const {return queue.cend();}
+    const_iterator cend() {return queue.cend();}
 
 private:
     std::list<Package> queue;

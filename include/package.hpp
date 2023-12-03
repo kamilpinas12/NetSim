@@ -16,7 +16,7 @@ public:
     Package(ElementID id) : id_(id) {assigned_IDs.insert(id);}
     Package(Package &&package) : id_(package.id_) {}
 
-    Package& operator=(Package &&package);
+    Package& operator=(Package&& package);
 
     ElementID get_id() const { return id_; }
     ~Package();
@@ -25,7 +25,7 @@ public:
 private:
     ElementID id_;
     static std::set<ElementID> assigned_IDs;
-    static std::set<ElementID > freed_IDs;
+    static std::set<ElementID> freed_IDs;
 
 
 };
