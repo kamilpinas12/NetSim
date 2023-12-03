@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.24)
 project(lab_netsim)
 
+cmake_minimum_required(VERSION 3.24)
+project(lab_netsim)
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion)
@@ -38,4 +41,3 @@ target_include_directories(${EXEC_TEST} PUBLIC
 add_subdirectory(${GTEST_ROOT} googletest-master)
 
 target_link_libraries(${EXEC_TEST} gmock)
-

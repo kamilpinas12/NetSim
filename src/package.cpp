@@ -12,19 +12,21 @@ std::set<ElementID> Package::freed_IDs = {};
 Package::Package() {
     //Kamil zrobil dobrą robotę  (Kamil)
 
+
     //jeżeli coś jest w zwolnionych id to przypisujemy najmniejszą wartość ze zwolniopnych
     // Zamieniłem metode size() na metodę empty() bo jest adekwatniejsza w tym przypadku (Filip)
     if(!freed_IDs.empty()){
         id_ = *freed_IDs.begin();
         freed_IDs.erase(id_);
     }
+        //jeżeli zwolnione id są puste nowe id o 1 większe od największego przypisanego
     //jeżeli zwolnione id są puste nowe id to o 1 większe od największego do tej
     //przypisanego
     else if(!assigned_IDs.empty()){
         id_ = *assigned_IDs.end() + 1;
     }
-    //pierwszy element dostaje id = 1 (nie wiem czy id zaczynają się od 0 czy od 1
-    //dałem 1 jak coś wystarczy zmienić poniżej)
+        //pierwszy element dostaje id = 1 (nie wiem czy id zaczynają się od 0 czy od 1
+        //dałem 1 jak coś wystarczy zmienić poniżej)
     else{
         id_ = 1;
     }

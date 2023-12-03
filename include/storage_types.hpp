@@ -9,8 +9,8 @@
 #include <list>
 #include "package.hpp"
 
-
-enum PackageQueueType{
+// waydaje mi się że ma być enum class
+enum class PackageQueueType{
     FIFO,
     LIFO
 };
@@ -27,13 +27,11 @@ public:
 
     //iteratory  (nie jestem pewien czy o to chodzi)
     // Wydaje mi się że te iteratory muszą być wirtualne bo ta klasa jest w pełni wirtualna
-    const_iterator begin() const {return queue.cbegin();}
-    const_iterator cbegin() const {return queue.cbegin();}
-    const_iterator end() const {return queue.end();}
-    const_iterator cend() const {return queue.cend();}
-// Coś tu nie gra bo interfejs nie przechowuje danych. Fajnie to jest opisane w książce kłęczka do cpp na stronie 68
-private:
-    std::list<Package> queue;
+    // przeniosłem implementacje tych iteratorów do PackageQueue bo faktycznie tutaj muszą być tylko wirtualne
+    virtual const_iterator begin() const = 0;
+    virtual const_iterator cbegin() const = 0;
+    virtual const_iterator end() const = 0;
+    virtual const_iterator cend() const = 0;
 
 };
 
@@ -42,6 +40,8 @@ public:
     virtual Package pop() = 0;
     virtual PackageQueueType get_queue_type() = 0;
 
+private:
+    std::list<Package> queue;
 };
 
 
@@ -50,6 +50,14 @@ public:
     //TODO: Zaimplementować metody, zmienne itp. tej klasy
 
 
+    //git Kamil (przeniesione z klasy IPackageStockpile)
+    const_iterator begin() const {return queue.cbegin();}
+    const_iterator cbegin() const {return queue.cbegin();}
+    const_iterator end() const {return queue.end();}
+    const_iterator cend() const {return queue.cend();}
+
+private:
+    std::list<Package> queue;
 };
 
 
