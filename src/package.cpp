@@ -33,7 +33,7 @@ Package::Package() {
 
 // Przenoszący operator przypisania (zamienia referencje do r-wartości na referencje do l-wartości)(move assignment operator)
 Package &Package::operator=(Package &&package) {
-    //TODO: (Filip)
+    //(Filip)
     if (this != &package){
         // Przeniesienie z assigned_IDs do freed_IDs
         assigned_IDs.erase(this->id_);
