@@ -40,8 +40,6 @@ public:
     virtual Package pop() = 0;
     virtual PackageQueueType get_queue_type() = 0;
 
-private:
-    std::list<Package> queue;
 };
 
 
