@@ -59,7 +59,4 @@ private:
 };
 
 
-
-
-
 #endif //LAB_NETSIM_STORAGE_TYPES_HPP
