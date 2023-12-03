@@ -49,13 +49,23 @@ public:
 
 
     //git Kamil (przeniesione z klasy IPackageStockpile)
+
+    //git Maria (CLion czepia się, że używamy metody abstrakcyjnej i jej nie
+    //nadpisujemy, to lepiej dodać "override" do każdej z iteracji
     const_iterator begin() const {return queue.cbegin();}
     const_iterator cbegin() const {return queue.cbegin();}
     const_iterator end() const {return queue.end();}
     const_iterator cend() const {return queue.cend();}
 
+    //git Maria (dodanie metod) - potrzebne do storage types. Nadpisanie metod pop()
+    // i get_queue_type()
+    Package pop() override;
+    PackageQueueType get_queue_type() override {return queue_type;}
+
 private:
     std::list<Package> queue;
+    //git Maria
+    PackageQueueType queue_type;
 };
 
 
