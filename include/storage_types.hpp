@@ -53,7 +53,10 @@ public:
     //git Maria (dodanie metod) - potrzebne do storage types. Nadpisanie metod pop()
     // i get_queue_type()
     Package pop() override;
+
     PackageQueueType get_queue_type() override {return queue_type;}
+
+    void push(Package&& package) override  {queue.emplace_back(std::move(package));}
 
 private:
     std::list<Package> queue;
