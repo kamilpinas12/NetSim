@@ -18,12 +18,11 @@ enum class PackageQueueType{
 
 class IPackageStockpile{
 public:
-    virtual void push(Package&&) = 0;
-    virtual bool empty() = 0;
-    virtual  std::size_t size() = 0;
-    virtual ~IPackageStockpile() = 0;
+    virtual void push(Package&& package) = 0;
+    virtual bool empty() const = 0;
+    virtual  std::size_t size() const = 0;
+    virtual ~IPackageStockpile() = default;
     using const_iterator = std::list<Package>::const_iterator;
-    //TODO: Napisać iteratorytej klasy
 
     virtual const_iterator begin() const = 0;
     virtual const_iterator cbegin() const = 0;
@@ -57,6 +56,11 @@ public:
     PackageQueueType get_queue_type() override {return queue_type;}
 
     void push(Package&& package) override  {queue.emplace_back(std::move(package));}
+
+    std::size_t size() const override {return queue.size();}
+
+    bool empty() const override {return queue.empty();}
+
 
 private:
     std::list<Package> queue;
