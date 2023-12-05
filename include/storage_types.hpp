@@ -41,7 +41,8 @@ public:
 
 class PackageQueue: public IPackageQueue{
 public:
-    //TODO: Zaimplementować metody, zmienne itp. tej klasy
+
+    explicit PackageQueue(PackageQueueType type) : queue(), queue_type(type) {}
 
 
     const_iterator begin() const override {return queue.cbegin();}
