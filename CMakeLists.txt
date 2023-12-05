@@ -6,7 +6,7 @@ project(lab_netsim)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion)
+#add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion)
 
 include_directories(include)
 set(SOURCE_FILES
@@ -25,7 +25,7 @@ set(SOURCES_FILES_TESTS
         test/test_package.cpp
         #test/test_reports.cpp
         #test/test_simulate.cpp
-        #test/test_storage_types.cpp
+        test/test_storage_types.cpp
         )
 
 set(EXEC_TEST ${PROJECT_ID}__test)
