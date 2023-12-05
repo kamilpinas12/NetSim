@@ -9,7 +9,7 @@
 #include <list>
 #include "package.hpp"
 
-// waydaje mi się że ma być enum class
+
 enum class PackageQueueType{
     FIFO,
     LIFO
@@ -25,9 +25,6 @@ public:
     using const_iterator = std::list<Package>::const_iterator;
     //TODO: Napisać iteratorytej klasy
 
-    //iteratory  (nie jestem pewien czy o to chodzi)
-    // Wydaje mi się że te iteratory muszą być wirtualne bo ta klasa jest w pełni wirtualna
-    // przeniosłem implementacje tych iteratorów do PackageQueue bo faktycznie tutaj muszą być tylko wirtualne
     virtual const_iterator begin() const = 0;
     virtual const_iterator cbegin() const = 0;
     virtual const_iterator end() const = 0;
@@ -39,7 +36,6 @@ class IPackageQueue: public IPackageStockpile{
 public:
     virtual Package pop() = 0;
     virtual PackageQueueType get_queue_type() = 0;
-
 };
 
 
@@ -48,10 +44,6 @@ public:
     //TODO: Zaimplementować metody, zmienne itp. tej klasy
 
 
-    //git Kamil (przeniesione z klasy IPackageStockpile)
-
-    //git Maria (CLion czepia się, że używamy metody abstrakcyjnej i jej nie
-    //nadpisujemy, to lepiej dodać "override" do każdej z iteracji
     const_iterator begin() const override {return queue.cbegin();}
     const_iterator cbegin() const override {return queue.cbegin();}
     const_iterator end() const override {return queue.end();}
