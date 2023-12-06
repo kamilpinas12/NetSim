@@ -36,10 +36,10 @@ Package &Package::operator=(Package &&package) {
     //(Filip)
     if (this != &package){
         // Przeniesienie z assigned_IDs do freed_IDs
-        assigned_IDs.erase(this->id_);
-        freed_IDs.insert(this->id_);
+        assigned_IDs.erase(id_);
+        freed_IDs.insert(id_);
         // Przypisanie nowych wartości
-        this->id_ = package.id_;
+        id_ = package.id_;
         assigned_IDs.insert(package.id_);
         return *this;
     }
