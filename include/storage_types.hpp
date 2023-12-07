@@ -41,31 +41,31 @@ public:
 class PackageQueue: public IPackageQueue{
 public:
 
-    explicit PackageQueue(PackageQueueType type) : queue(), queue_type(type) {}
+    explicit PackageQueue(PackageQueueType type) : queue_(), queue_type_(type) {}
 
 
-    const_iterator begin() const override {return queue.cbegin();}
-    const_iterator cbegin() const override {return queue.cbegin();}
-    const_iterator end() const override {return queue.end();}
-    const_iterator cend() const override {return queue.cend();}
+    const_iterator begin() const override {return queue_.cbegin();}
+    const_iterator cbegin() const override {return queue_.cbegin();}
+    const_iterator end() const override {return queue_.end();}
+    const_iterator cend() const override {return queue_.cend();}
 
     //git Maria (dodanie metod) - potrzebne do storage types. Nadpisanie metod pop()
     // i get_queue_type()
     Package pop() override;
 
-    PackageQueueType get_queue_type() override {return queue_type;}
+    PackageQueueType get_queue_type() override {return queue_type_;}
 
-    void push(Package&& package) override  {queue.emplace_back(std::move(package));}
+    void push(Package&& package) override  {queue_.emplace_back(std::move(package));}
 
-    std::size_t size() const override {return queue.size();}
+    std::size_t size() const override {return queue_.size();}
 
-    bool empty() const override {return queue.empty();}
+    bool empty() const override {return queue_.empty();}
 
 
 private:
-    std::list<Package> queue;
+    std::list<Package> queue_;
     //git Maria
-    PackageQueueType queue_type;
+    PackageQueueType queue_type_;
 };
 
 #endif //LAB_NETSIM_STORAGE_TYPES_HPP
