@@ -49,22 +49,16 @@ public:
     const_iterator end() const override {return queue_.end();}
     const_iterator cend() const override {return queue_.cend();}
 
-    //git Maria (dodanie metod) - potrzebne do storage types. Nadpisanie metod pop()
-    // i get_queue_type()
+
     Package pop() override;
-
     PackageQueueType get_queue_type() override {return queue_type_;}
-
     void push(Package&& package) override  {queue_.emplace_back(std::move(package));}
-
     std::size_t size() const override {return queue_.size();}
-
     bool empty() const override {return queue_.empty();}
 
 
 private:
     std::list<Package> queue_;
-    //git Maria
     PackageQueueType queue_type_;
 };
 
