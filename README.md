@@ -1,1 +1,2 @@
-Dodałem pare TODO w kodzie i to są z grubsza rzeczy do zrobienia. W zasadzie to mamy do zrobienia 2 klasy(Package, PackageQueue)
+Zrobiłem szkielet, nie byłem pewny kilku rzeczy więc mogą być błędy ale chciałem go dodać na GitHuba żeby każdy mógł już robić jak chce, 
+dodałem też branche :)
