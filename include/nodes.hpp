@@ -15,43 +15,18 @@
 
 // @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
 
-// nie jestem pewny dziedziczeń w między klasami ReceiverPreferences i PackageSender ale wysyłam tak żeby już na GitHubie
-//  był jakiś szkielet :)
+// nie jestem pewien relacji między klasami
 
-class Ramp
-{
-public:
-    Ramp(ElementID id, TimeOffset di);
-    void deliver_goods(Time t);
-    TimeOffset get_delivery_interval(void);
-    ElementID get_id(void);
-};
-
-
-class Worker: public IPackageQueue
-{
-public:
-    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q);
-    void do_work(Time t);
-    TimeOffset get_processing_duration(void);
-    Time get_package_processing_start_time(void);
-};
-
-
-class Storehouse: public IPackageStockpile
-{
-public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d);
-};
 
 
 //klasa wirtualna
-class IPackageReceiver: public Worker, public Storehouse
+class IPackageReceiver
 {
 public:
     virtual void receive_package(Package&& p) = 0;
     virtual ElementID get_id(void) = 0;
 };
+
 
 
 class ReceiverPreferences
@@ -71,7 +46,9 @@ private:
 };
 
 
-class PackageSender: public Ramp, public Worker
+
+
+class PackageSender
 {
 public:
     PackageSender(PackageSender&&);
@@ -84,6 +61,49 @@ protected:
 private:
     ReceiverPreferences receiver_preferences_;
 };
+
+
+
+
+
+class Ramp: public PackageSender
+{
+public:
+    Ramp(ElementID id, TimeOffset di);
+    void deliver_goods(Time t);
+    TimeOffset get_delivery_interval(void);
+    ElementID get_id(void);
+};
+
+
+
+
+class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
+{
+public:
+    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q);
+    void do_work(Time t);
+    TimeOffset get_processing_duration(void);
+    Time get_package_processing_start_time(void);
+};
+
+
+
+
+
+class Storehouse: public IPackageStockpile, public IPackageReceiver
+{
+public:
+    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d);
+};
+
+
+
+
+
+
+
+
 
 
 
