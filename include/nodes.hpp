@@ -88,8 +88,6 @@ public:
 };
 
 
-
-
 // Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
 
 class Storehouse: public IPackageReceiver
@@ -109,18 +107,6 @@ private:
     ElementID id_;
     std::unique_ptr<IPackageStockpile> d_;
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif //LAB_NETSIM_NODES_HPP
