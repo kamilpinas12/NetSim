@@ -95,10 +95,10 @@ class Storehouse: public IPackageReceiver
 public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d) : id_(id) {d_ = std::move(d);};
 
-    IPackageStockpile::const_iterator begin() const override {return d_->begin();}
-    IPackageStockpile::const_iterator cbegin() const override {return d_->cbegin();}
-    IPackageStockpile::const_iterator end() const override {return d_->end();}
-    IPackageStockpile::const_iterator cend() const override {return d_->cend();}
+    IPackageStockpile::const_iterator begin() const {return d_->begin();}
+    IPackageStockpile::const_iterator cbegin() const {return d_->cbegin();}
+    IPackageStockpile::const_iterator end() const {return d_->end();}
+    IPackageStockpile::const_iterator cend() const {return d_->cend();}
 
     void receive_package(Package&& p) override {d_->push(std::move(p));}
     ElementID get_id() override {return id_;}
