@@ -24,7 +24,7 @@ class IPackageReceiver
 {
 public:
     virtual void receive_package(Package&& p) = 0;
-    virtual ElementID get_id(void) = 0;
+    virtual ElementID get_id() = 0;
 };
 
 
@@ -90,11 +90,23 @@ public:
 
 
 
-
-class Storehouse: public IPackageStockpile, public IPackageReceiver
+// Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
+class Storehouse: public IPackageReceiver
 {
 public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d);
+    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d) : id_(id) {d_ = std::move(d);};
+
+    IPackageStockpile::const_iterator begin() const override {return d_->begin();}
+    IPackageStockpile::const_iterator cbegin() const override {return d_->cbegin();}
+    IPackageStockpile::const_iterator end() const override {return d_->end();}
+    IPackageStockpile::const_iterator cend() const override {return d_->cend();}
+
+    void receive_package(Package&& p) override {d_->push(std::move(p));}
+    ElementID get_id() override {return id_;}
+
+private:
+    ElementID id_;
+    std::unique_ptr<IPackageStockpile> d_;
 };
 
 
