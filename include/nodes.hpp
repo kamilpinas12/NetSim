@@ -17,9 +17,12 @@
 
 // nie jestem pewien relacji między klasami
 
-
+//@TODO: (Maria) A jakby dodać klasę enum dla otrzymanego typu? WORKER i STOREHOUSE. Mogę to uzupełnić
 
 //klasa wirtualna
+
+//@TODO (Maria) jeszcze to trzeba uzupełnić, ja się tym zajmę. Braukuje tu iteratorów,
+//Inteligentnych wskaźników i desktruktora.
 class IPackageReceiver
 {
 public:
@@ -28,7 +31,8 @@ public:
 };
 
 
-
+//@TODO (Maria) To też trzeba uzupełnić. Znowu
+//brakuje jednego pola prywatnego. "pg" powinno być powiązane z "probality_generator"
 class ReceiverPreferences
 {
 public:
@@ -45,9 +49,8 @@ private:
     preferences_t preferences_;
 };
 
-
-
-
+//@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
+//metodę "push_package"
 class PackageSender
 {
 public:
@@ -63,9 +66,7 @@ private:
 };
 
 
-
-
-
+//@TODO: (Maria) Tutaj brakuje pól prywatnych, dla elemetuID, offsetu, time'a i buffora.
 class Ramp: public PackageSender
 {
 public:
@@ -77,7 +78,7 @@ public:
 
 
 
-
+//@TODO: (Maria) znowu iteratory, ale i też klasa wirtualna i pola prywatne.
 class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
 {
 public:
@@ -89,8 +90,8 @@ public:
 
 
 
-
-
+//@TODO: (Maria) brakuje tu metody otrzymującej paczkę, np. "receive_package". Potrzebne są iteratory
+// i pola prywatne
 class Storehouse: public IPackageStockpile, public IPackageReceiver
 {
 public:
