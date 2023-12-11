@@ -91,6 +91,7 @@ public:
 
 
 // Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
+
 class Storehouse: public IPackageReceiver
 {
 public:
