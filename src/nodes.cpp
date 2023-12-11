@@ -25,4 +25,18 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver *r) {
     }
 }
 
+IPackageReceiver* ReceiverPreferences::choose_receiver() {
+    double i = 0;
+    auto it = preferences_.begin();
+    while (i < probability_generator_()){
+        if (it != preferences_.end()){
+            std::advance(it, 1);
+            i += it->second;
+        }else{
+            break;
+        }
+    }
+    return it->first;
+}
+
 

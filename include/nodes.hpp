@@ -50,8 +50,8 @@ public:
 
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
-    IPackageReceiver* choose_receiver(void);
-    preferences_t& get_preferences(void);
+    IPackageReceiver* choose_receiver();
+    preferences_t& get_preferences() {return preferences_;};
 
 private:
     preferences_t preferences_;
