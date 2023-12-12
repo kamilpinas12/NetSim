@@ -26,7 +26,7 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver *r) {
 }
 
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
-    auto ran = pr();
+    auto ran = probability_generator_();
     double i = 0.0;
     auto it = preferences_.begin();
     while (i < ran){
