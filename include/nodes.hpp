@@ -64,7 +64,7 @@ private:
 class PackageSender
 {
 public:
-    PackageSender(PackageSender&&);
+    PackageSender(PackageSender&& p) {receiver_preferences_ = p.receiver_preferences_;}
     void send_package(void);
     std::optional<Package>& get_sending_buffer(void);
 
