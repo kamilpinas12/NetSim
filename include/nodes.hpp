@@ -18,9 +18,12 @@
 
 // nie jestem pewien relacji między klasami
 
-
+//@TODO: (Maria) A jakby dodać klasę enum dla otrzymanego typu? WORKER i STOREHOUSE. Mogę to uzupełnić
 
 //klasa wirtualna
+
+//@TODO (Maria) jeszcze to trzeba uzupełnić, ja się tym zajmę. Braukuje tu iteratorów,
+//Inteligentnych wskaźników i desktruktora.
 class IPackageReceiver
 {
 public:
@@ -34,7 +37,8 @@ public:
 };
 
 
-
+//@TODO (Maria) To też trzeba uzupełnić. Znowu
+//brakuje jednego pola prywatnego. "pg" powinno być powiązane z "probality_generator"
 class ReceiverPreferences
 {
 public:
@@ -58,9 +62,8 @@ private:
     ProbabilityGenerator probability_generator_;
 };
 
-
-
-
+//@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
+//metodę "push_package"
 class PackageSender
 {
 public:
@@ -76,9 +79,7 @@ private:
 };
 
 
-
-
-
+//@TODO: (Maria) Tutaj brakuje pól prywatnych, dla elemetuID, offsetu, time'a i buffora.
 class Ramp: public PackageSender
 {
 public:
@@ -90,7 +91,7 @@ public:
 
 
 
-
+//@TODO: (Maria) znowu iteratory, ale i też klasa wirtualna i pola prywatne.
 class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
 {
 public:
@@ -103,8 +104,8 @@ public:
 
 // Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
 
-class Storehouse: public IPackageReceiver
-{
+
+class Storehouse: public IPackageReceiver{
 public:
     //TODO: Ogarnąć to z wersją Marysi
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d) : id_(id) {d_ = std::move(d);};
