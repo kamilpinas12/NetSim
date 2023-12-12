@@ -11,6 +11,7 @@
 
 #include"types.hpp"
 #include"storage_types.hpp"
+#include"helpers.hpp"
 
 
 // @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
@@ -27,7 +28,12 @@ class IPackageReceiver
 {
 public:
     virtual void receive_package(Package&& p) = 0;
-    virtual ElementID get_id(void) = 0;
+    virtual ElementID get_id() = 0;
+
+    virtual IPackageStockpile::const_iterator begin() const = 0;
+    virtual IPackageStockpile::const_iterator cbegin() const = 0;
+    virtual IPackageStockpile::const_iterator end() const = 0;
+    virtual IPackageStockpile::const_iterator cend() const = 0;
 };
 
 
@@ -39,14 +45,21 @@ public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences(ProbabilityGenerator pg);
+    ReceiverPreferences(ProbabilityGenerator pg = probability_generator) {probability_generator_ = std::move(pg);}
+
+    const_iterator begin() const {return preferences_.begin();}
+    const_iterator end() const {return preferences_.end();}
+    const_iterator cbegin() const {return preferences_.cbegin();}
+    const_iterator cend() const {return preferences_.cend();}
+
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
-    IPackageReceiver* choose_receiver(void);
-    preferences_t& get_preferences(void);
+    IPackageReceiver* choose_receiver();
+    preferences_t& get_preferences() {return preferences_;};
 
 private:
     preferences_t preferences_;
+    ProbabilityGenerator probability_generator_;
 };
 
 //@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
@@ -54,7 +67,7 @@ private:
 class PackageSender
 {
 public:
-    PackageSender(PackageSender&&);
+    PackageSender(PackageSender&& p) {receiver_preferences_ = p.receiver_preferences_;}
     void send_package(void);
     std::optional<Package>& get_sending_buffer(void);
 
@@ -89,26 +102,26 @@ public:
 };
 
 
+// Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
 
-//@TODO: (Maria) brakuje tu metody otrzymującej paczkę, np. "receive_package". Potrzebne są iteratory
-// i pola prywatne
-class Storehouse: public IPackageStockpile, public IPackageReceiver
-{
+
+class Storehouse: public IPackageReceiver{
 public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d);
+    //TODO: Ogarnąć to z wersją Marysi
+    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d) : id_(id) {d_ = std::move(d);};
+
+    IPackageStockpile::const_iterator begin() const override {return d_->begin();}
+    IPackageStockpile::const_iterator cbegin() const override {return d_->cbegin();}
+    IPackageStockpile::const_iterator end() const override {return d_->end();}
+    IPackageStockpile::const_iterator cend() const override {return d_->cend();}
+
+    void receive_package(Package&& p) override {d_->push(std::move(p));}
+    ElementID get_id() override {return id_;}
+
+private:
+    ElementID id_;
+    std::unique_ptr<IPackageStockpile> d_;
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif //LAB_NETSIM_NODES_HPP
