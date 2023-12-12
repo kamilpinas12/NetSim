@@ -75,7 +75,10 @@ private:
 //@TODO: (Maria) Uzupełniłam metody i bufor.
 class PackageSender {
 public:
+    PackageSender() = default;
+
     PackageSender(PackageSender&& pack_sender) = default;
+
     void send_package(void);
 
     std::optional<Package>& get_sending_buffer(void) { return bufor_; };
@@ -91,7 +94,7 @@ private:
 
 
 
-//@TODO: (Maria) Coś tutaj nie działa, dwie pierwsze linijki. Muszę jeszcze na to spojrzeć
+//@TODO: (Maria) Wiem w czym był problem - teraz powinno działać
 class Ramp: public PackageSender
 {
 public:
@@ -112,7 +115,7 @@ private:
 
 
 
-//@TODO: (Maria) Dalej coś nie działa w pierwszej linijce, na to muszę jeszcze rzucić okiem
+//@TODO: (Maria) Udało mi się to naprawić.
 class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
 {
 public:
