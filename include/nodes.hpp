@@ -19,10 +19,14 @@
 
 // @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
 
-// nie jestem pewien relacji między klasami
-
-
 //@TODO: (Maria) Klasa enum
+
+
+// (Kamil) w tym pliku zmieniłem kilka nazw zmiennych bo t_ troche mało mówi,
+// wydaje mi się że można również usunąć bufor w klasie Ramp
+// override w (128) nie wiem po co był skoro klasa nie nadpisuje tej metody
+
+
 
 enum class ReceiverType {
     WORKER, STOREHOUSE
@@ -66,16 +70,12 @@ private:
 };
 
 //@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
-//metodę "push_package"
 class PackageSender
 {
 public:
     PackageSender() = default;
-
     PackageSender(PackageSender&& pack_sender) = default;
-  
     void send_package(void);
-
     std::optional<Package>& get_sending_buffer(void) { return bufor_; };
 
 protected:
@@ -94,18 +94,14 @@ class Ramp: public PackageSender
 {
 public:
     Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
-
     void deliver_goods(Time t);
-
     TimeOffset get_delivery_interval(void) { return di_; };
-
     ElementID get_id(void) { return id_; };
 
 private:
     ElementID id_;
     TimeOffset di_;
-    Time t_;
-    std::optional<Package> bufor_ = std::nullopt;
+    Time last_delivery_time_t_;
 };
 
 
@@ -116,10 +112,10 @@ public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q): PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
 
-    TimeOffset get_processing_duration(void) { return pd_; };
-    Time get_package_processing_start_time(void) { return t_; };
+    TimeOffset get_processing_duration(void) const { return pd_; };
+    Time get_package_processing_start_time(void) const { return start_t_; };
 
-    void receive_package(Package&& p) override;
+    void receive_package(Package&& p) override {push(std::move(p));}
 
     ElementID get_id() override { return id_; }
 
@@ -129,12 +125,12 @@ public:
     const_iterator end() const override { return q_ -> cend(); }
 
 
-    ReceiverType get_receiver_type() override { return ReceiverType::WORKER; }
+    ReceiverType get_receiver_type() { return ReceiverType::WORKER; }
 
 private:
     ElementID id_;
     TimeOffset  pd_;
-    Time t_;
+    Time start_t_;
     std::unique_ptr<IPackageQueue> q_;
     std::optional<Package> bufor_ = std::nullopt;
 };
