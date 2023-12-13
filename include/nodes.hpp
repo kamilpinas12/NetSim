@@ -9,21 +9,26 @@
 #include<map>
 #include<optional>
 
-#include"types.hpp"
-#include"storage_types.hpp"
-#include"helpers.hpp"
+
+#include "types.hpp"
+#include "storage_types.hpp"
+#include "helpers.hpp"
+#include "package.hpp"
+
 
 
 // @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
 
 // nie jestem pewien relacji między klasami
 
-//@TODO: (Maria) A jakby dodać klasę enum dla otrzymanego typu? WORKER i STOREHOUSE. Mogę to uzupełnić
 
-//klasa wirtualna
+//@TODO: (Maria) Klasa enum
 
-//@TODO (Maria) jeszcze to trzeba uzupełnić, ja się tym zajmę. Braukuje tu iteratorów,
-//Inteligentnych wskaźników i desktruktora.
+enum class ReceiverType {
+    WORKER, STOREHOUSE
+};
+
+
 class IPackageReceiver
 {
 public:
@@ -37,11 +42,8 @@ public:
 };
 
 
-//@TODO (Maria) To też trzeba uzupełnić. Znowu
-//brakuje jednego pola prywatnego. "pg" powinno być powiązane z "probality_generator"
 class ReceiverPreferences
 {
-public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
@@ -67,42 +69,74 @@ private:
 class PackageSender
 {
 public:
-    PackageSender(PackageSender&& p) {receiver_preferences_ = p.receiver_preferences_;}
+    PackageSender() = default;
+
+    PackageSender(PackageSender&& pack_sender) = default;
+  
     void send_package(void);
-    std::optional<Package>& get_sending_buffer(void);
+
+    std::optional<Package>& get_sending_buffer(void) { return bufor_; };
 
 protected:
-    void push_package(Package&&);
+    void push_package(Package&& package) { bufor_.emplace(package.get_id()); };
 
 private:
     ReceiverPreferences receiver_preferences_;
+    std::optional<Package> bufor_ = std::nullopt;
 };
 
 
-//@TODO: (Maria) Tutaj brakuje pól prywatnych, dla elemetuID, offsetu, time'a i buffora.
+
+
+//@TODO: (Maria) Wiem w czym był problem - teraz powinno działać
 class Ramp: public PackageSender
 {
 public:
-    Ramp(ElementID id, TimeOffset di);
+    Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
+
     void deliver_goods(Time t);
-    TimeOffset get_delivery_interval(void);
-    ElementID get_id(void);
+
+    TimeOffset get_delivery_interval(void) { return di_; };
+
+    ElementID get_id(void) { return id_; };
+
+private:
+    ElementID id_;
+    TimeOffset di_;
+    Time t_;
+    std::optional<Package> bufor_ = std::nullopt;
 };
 
 
-
-//@TODO: (Maria) znowu iteratory, ale i też klasa wirtualna i pola prywatne.
+//@TODO: (Maria) Udało mi się to naprawić.
 class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
 {
 public:
-    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q);
+    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q): PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
-    TimeOffset get_processing_duration(void);
-    Time get_package_processing_start_time(void);
+
+    TimeOffset get_processing_duration(void) { return pd_; };
+    Time get_package_processing_start_time(void) { return t_; };
+
+    void receive_package(Package&& p) override;
+
+    ElementID get_id() override { return id_; }
+
+    const_iterator cbegin() const override { return q_ -> cbegin(); }
+    const_iterator cend() const override { return q_ -> cend(); }
+    const_iterator begin() const override { return q_ -> cbegin(); }
+    const_iterator end() const override { return q_ -> cend(); }
+
+
+    ReceiverType get_receiver_type() override { return ReceiverType::WORKER; }
+
+private:
+    ElementID id_;
+    TimeOffset  pd_;
+    Time t_;
+    std::unique_ptr<IPackageQueue> q_;
+    std::optional<Package> bufor_ = std::nullopt;
 };
-
-
-// Dziedziczymy tylko po IPackageReciver a do klasy IPackageStockpile tworzymy inteligentny wskaźnik
 
 
 class Storehouse: public IPackageReceiver
