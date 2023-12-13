@@ -44,6 +44,7 @@ public:
 
 class ReceiverPreferences
 {
+public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
