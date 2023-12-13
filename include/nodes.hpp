@@ -9,15 +9,18 @@
 #include<map>
 #include<optional>
 
+
 #include "types.hpp"
 #include "storage_types.hpp"
 #include "helpers.hpp"
 #include "package.hpp"
 
 
+
 // @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
 
 // nie jestem pewien relacji między klasami
+
 
 //@TODO: (Maria) Klasa enum
 
@@ -25,60 +28,51 @@ enum class ReceiverType {
     WORKER, STOREHOUSE
 };
 
-//klasa wirtualna
 
-//@TODO (Maria) dodałam odpowiednie pola i destruktor
 class IPackageReceiver
 {
 public:
     virtual void receive_package(Package&& p) = 0;
+    virtual ElementID get_id() = 0;
 
-    virtual ElementID get_id(void) = 0;
-
-    virtual IPackageStockpile::const_iterator cbegin() const = 0;
-    virtual IPackageStockpile::const_iterator cend() const = 0;
     virtual IPackageStockpile::const_iterator begin() const = 0;
+    virtual IPackageStockpile::const_iterator cbegin() const = 0;
     virtual IPackageStockpile::const_iterator end() const = 0;
-
-    virtual ReceiverType get_receiver_type() = 0;
-
-    virtual ~IPackageReceiver() = default;
+    virtual IPackageStockpile::const_iterator cend() const = 0;
 };
 
 
-//@TODO (Maria) Dodałam iteratory i uzupełniłam metody
 class ReceiverPreferences
 {
-public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : pg_(std::move(pg)) {}
+    ReceiverPreferences(ProbabilityGenerator pg = probability_generator) {probability_generator_ = std::move(pg);}
 
-    const_iterator cbegin() const { return preferences_.cbegin(); }
-    const_iterator cend() const { return preferences_.cend(); }
-    const_iterator begin() const { return preferences_.cbegin(); }
-    const_iterator end() const { return preferences_.cend(); }
+    const_iterator begin() const {return preferences_.begin();}
+    const_iterator end() const {return preferences_.end();}
+    const_iterator cbegin() const {return preferences_.cbegin();}
+    const_iterator cend() const {return preferences_.cend();}
 
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
-    IPackageReceiver* choose_receiver(void);
-    preferences_t& get_preferences(void) { return  preferences_; };
+    IPackageReceiver* choose_receiver();
+    preferences_t& get_preferences() {return preferences_;};
 
 private:
     preferences_t preferences_;
-    ProbabilityGenerator pg_;
+    ProbabilityGenerator probability_generator_;
 };
 
-
-
-//@TODO: (Maria) Uzupełniłam metody i bufor.
-class PackageSender {
+//@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
+//metodę "push_package"
+class PackageSender
+{
 public:
     PackageSender() = default;
 
     PackageSender(PackageSender&& pack_sender) = default;
-
+  
     void send_package(void);
 
     std::optional<Package>& get_sending_buffer(void) { return bufor_; };
@@ -114,7 +108,6 @@ private:
 };
 
 
-
 //@TODO: (Maria) Udało mi się to naprawić.
 class Worker: public PackageSender, public IPackageQueue, public IPackageReceiver
 {
@@ -134,6 +127,7 @@ public:
     const_iterator begin() const override { return q_ -> cbegin(); }
     const_iterator end() const override { return q_ -> cend(); }
 
+
     ReceiverType get_receiver_type() override { return ReceiverType::WORKER; }
 
 private:
@@ -145,22 +139,19 @@ private:
 };
 
 
-//@TODO: (Maria) Uzupełniłam klasę - iteratory i metody
-class Storehouse: public IPackageStockpile, public IPackageReceiver
+class Storehouse: public IPackageReceiver
 {
 public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id), d_(std::move(d)) {}
+    //TODO: Ogarnąć to z wersją Marysi
+    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d) : id_(id) {d_ = std::move(d);};
 
-    void receive_package(Package&& p) override;
+    IPackageStockpile::const_iterator begin() const override {return d_->begin();}
+    IPackageStockpile::const_iterator cbegin() const override {return d_->cbegin();}
+    IPackageStockpile::const_iterator end() const override {return d_->end();}
+    IPackageStockpile::const_iterator cend() const override {return d_->cend();}
 
-    ElementID get_id() override { return id_; }
-
-    const_iterator cbegin() const override { return d_ -> cbegin(); }
-    const_iterator cend() const override { return d_ -> cend(); }
-    const_iterator begin() const override { return d_ -> cbegin(); }
-    const_iterator end() const override { return d_ -> cend(); }
-
-    ReceiverType get_receiver_type() override { return ReceiverType::STOREHOUSE; }
+    void receive_package(Package&& p) override {d_->push(std::move(p));}
+    ElementID get_id() override {return id_;}
 
 private:
     ElementID id_;
