@@ -43,6 +43,8 @@ public:
     virtual IPackageStockpile::const_iterator cbegin() const = 0;
     virtual IPackageStockpile::const_iterator end() const = 0;
     virtual IPackageStockpile::const_iterator cend() const = 0;
+
+    virtual ~IPackageReceiver() = default;
 };
 
 
@@ -77,8 +79,9 @@ public:
 
     PackageSender() = default;
     PackageSender(PackageSender&& pack_sender) = default;
-    void send_package(void){}
-    std::optional<Package>& get_sending_buffer(void) { return bufor_; };
+
+    std::optional<Package>& get_sending_buffer() { return bufor_; };
+    void send_package();
 
 protected:
     void push_package(Package&& package) { bufor_.emplace(package.get_id()); };
@@ -97,8 +100,8 @@ class Ramp: public PackageSender
 public:
     Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
     void deliver_goods(Time t);
-    TimeOffset get_delivery_interval(void) { return di_; };
-    ElementID get_id(void) { return id_; };
+    TimeOffset get_delivery_interval() { return di_; };
+    ElementID get_id() { return id_; };
 
 private:
     ElementID id_;
@@ -114,8 +117,8 @@ public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q): PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
 
-    TimeOffset get_processing_duration(void) const { return pd_; };
-    Time get_package_processing_start_time(void) const { return start_t_; };
+    TimeOffset get_processing_duration() const { return pd_; };
+    Time get_package_processing_start_time() const { return start_t_; };
 
     void receive_package(Package&& p) override {q_->push(std::move(p));}
 
@@ -131,7 +134,7 @@ public:
 
 private:
     ElementID id_;
-    TimeOffset  pd_;
+    TimeOffset pd_;
     Time start_t_;
     std::unique_ptr<IPackageQueue> q_;
     std::optional<Package> bufor_ = std::nullopt;
