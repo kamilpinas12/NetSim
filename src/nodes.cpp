@@ -58,6 +58,7 @@ void Worker::do_work(Time t) {
     // przetwarzanie zakończone, package przeniesiona do bufora PackageSender
     else if((t - start_t_) >= pd_ - 1 && bufor_.has_value()){
         push_package(std::move(bufor_.value()));
+        bufor_.reset();
     }
 }
 
