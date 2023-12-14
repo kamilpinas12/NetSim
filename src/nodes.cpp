@@ -74,5 +74,6 @@ void Ramp::deliver_goods(Time t) {
 void PackageSender::send_package(){
     if(bufor_.has_value()) {
         receiver_preferences_.choose_receiver()->receive_package(std::move(bufor_.value()));
+        bufor_.reset();
     }
 }
