@@ -16,18 +16,6 @@
 #include "package.hpp"
 
 
-
-// @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
-
-//@TODO: (Maria) Klasa enum
-
-
-// (Kamil) w tym pliku zmieniłem kilka nazw zmiennych bo t_ troche mało mówi,
-// wydaje mi się że można również usunąć bufor w klasie Ramp
-// override w (128) nie wiem po co był skoro klasa nie nadpisuje tej metody
-
-
-
 enum class ReceiverType {
     WORKER, STOREHOUSE
 };
@@ -71,7 +59,9 @@ private:
     ProbabilityGenerator probability_generator_;
 };
 
-//@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
+
+
+
 class PackageSender
 {
 public:
@@ -94,7 +84,6 @@ private:
 
 
 
-//@TODO: (Maria) Wiem w czym był problem - teraz powinno działać
 class Ramp: public PackageSender
 {
 public:
@@ -110,7 +99,8 @@ private:
 };
 
 
-//@TODO: (Maria) Udało mi się to naprawić.
+
+
 class Worker: public PackageSender, public IPackageReceiver
 {
 public:
@@ -144,7 +134,6 @@ private:
 class Storehouse: public IPackageReceiver
 {
 public:
-    //TODO: Ogarnąć to z wersją Marysi
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id) {d_ = std::move(d);};
 
     IPackageStockpile::const_iterator begin() const override {return d_->begin();}
