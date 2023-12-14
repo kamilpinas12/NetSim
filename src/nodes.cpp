@@ -41,3 +41,30 @@ IPackageReceiver* ReceiverPreferences::choose_receiver() {
 }
 
 
+
+// (Kamil) funkcje do zweryfikowania bo nie wiem na 100% czy o to chodzi
+
+
+void Worker::do_work(Time t) {
+    // jeśli bufor jest pusty i jest coś w kolejce to przenieś package
+    // z kolejki do bufora i zacznij przetwarzanie
+    if (!bufor_.has_value() && !(q_->empty())){
+        start_t_ = t;
+        bufor_.emplace(std::move(q_->pop()));
+    }
+    // przetwarzanie zakończone, package przeniesiona do bufora PackageSender
+    else if((t - start_t_) >= pd_ && bufor_.has_value()){
+        push_package(std::move(bufor_.value()));
+    }
+}
+
+
+void Ramp::deliver_goods(Time t) {
+if((t - last_delivery_time_t_) >= di_){
+    Package p;
+    push_package(std::move(p));
+    last_delivery_time_t_ = t;
+}
+
+
+}
