@@ -16,19 +16,22 @@ void ReceiverPreferences::add_receiver(IPackageReceiver *r) {
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver *r) {
-    preferences_.erase(r);
-    std::size_t size = preferences_.size();
-    if (size != 1){
-        for (auto& obj : preferences_){
-            obj.second = 1.0 / (double(size) - 1);
+    auto x = preferences_.find(r);
+    if (x != preferences_.end()){
+        preferences_.erase(x);
+        std::size_t size = preferences_.size();
+        if (size != 0){
+            for (auto& obj : preferences_){
+                obj.second = 1.0 / (double(size));
+            }
         }
     }
 }
 
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
     auto ran = probability_generator_();
-    double i = 0.0;
     auto it = preferences_.begin();
+    double i = it-> second;
     while (i < ran){
         if (it != preferences_.end()){
             std::advance(it, 1);
