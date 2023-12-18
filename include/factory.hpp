@@ -9,13 +9,15 @@
 #include "storage_types.hpp"
 #include "nodes.hpp"
 #include "package.hpp"
-#endif //LAB_NETSIM_FACTORY_HPP
 
 
-template <class T>
+
+
+//zmieniłem z T na Node bo tak jest w instrukcji
+template <class Node>
 class NodeCollection{
 public:
-    using container_t = typename std::list<T>;
+    using container_t = typename std::list<Node>;
     using const_iterator = typename container_t::const_iterator;
     using iterator = typename container_t::iterator;
 
@@ -29,11 +31,19 @@ public:
     iterator cbegin() {return collection_.cbegin();}
     iterator cend() {return collection_.cend();}
 
-    void add(T&&  node) {collection_.insert(std::move(node));}
+    void add(Node&&  node) {collection_.insert(std::move(node));}
 
     //TODO: metody remove_by_id i find_by_id (Kamil)
-    void remove_by_id(ElementID id);
-    iterator find_by_id(ElementID id);
+    void remove_by_id(ElementID id){
+        auto it = find_by_id(id);
+        if(it != collection_.end()) collection_.erase(it);
+    }
+
+    iterator find_by_id(ElementID id){
+        return std::find_if(collection_.begin(), collection_.end(),
+        [id](const auto& elem){ return (elem.get_id() == id);});}
+
+
     //const_iterator  find_by_id const (Element id);
 
 private:
@@ -58,6 +68,11 @@ public:
     void do_package_passing();
     void do_work(Time t);
 private:
+
+    //nie jestem czy tak to powinno wyglądać (Kamil)
+    template <class Node>
+    void remove_receiver(NodeCollection<Node>& collection, ElementID id);
+
     NodeCollection<Storehouse>  storehouse_;
     NodeCollection<Worker> worker_;
     NodeCollection<Ramp> ramp_;
@@ -65,3 +80,4 @@ private:
 
 
 
+#endif //LAB_NETSIM_FACTORY_HPP
