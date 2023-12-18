@@ -40,6 +40,9 @@ private:
     container_t collection_;
 };
 
+
+
+
 class Factory{
 public:
     // TODO: Zrealizować funkcjonalności Rampy, Workera i Storehouse
@@ -53,7 +56,7 @@ public:
     //TODO: Metody wykonujące przekazania
     void do_delivery(Time t);
     void do_package_passing();
-    void do_work();
+    void do_work(Time t);
 private:
     NodeCollection<Storehouse>  storehouse_;
     NodeCollection<Worker> worker_;
