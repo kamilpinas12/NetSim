@@ -27,3 +27,9 @@ void Factory::do_package_passing() {
         ramp.send_package();
     }
 }
+
+template <class Node>
+void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id)
+{
+
+}
