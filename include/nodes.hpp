@@ -16,18 +16,6 @@
 #include "package.hpp"
 
 
-
-// @TODO zaimplementować metody tutaj lub w pliku nodes.cpp
-
-//@TODO: (Maria) Klasa enum
-
-
-// (Kamil) w tym pliku zmieniłem kilka nazw zmiennych bo t_ troche mało mówi,
-// wydaje mi się że można również usunąć bufor w klasie Ramp
-// override w (128) nie wiem po co był skoro klasa nie nadpisuje tej metody
-
-
-
 enum class ReceiverType {
     WORKER, STOREHOUSE
 };
@@ -38,11 +26,14 @@ class IPackageReceiver
 public:
     virtual void receive_package(Package&& p) = 0;
     virtual ElementID get_id() const = 0;
+    virtual ReceiverType get_receiver_type() const = 0;
 
     virtual IPackageStockpile::const_iterator begin() const = 0;
     virtual IPackageStockpile::const_iterator cbegin() const = 0;
     virtual IPackageStockpile::const_iterator end() const = 0;
     virtual IPackageStockpile::const_iterator cend() const = 0;
+
+    virtual ~IPackageReceiver() = default;
 };
 
 
@@ -69,7 +60,9 @@ private:
     ProbabilityGenerator probability_generator_;
 };
 
-//@TODO: (Maria) Tu by się przydał bufor, tak było napisane w konspekcie. Trzeba też uzupełnić
+
+
+
 class PackageSender
 {
 public:
@@ -77,8 +70,9 @@ public:
 
     PackageSender() = default;
     PackageSender(PackageSender&& pack_sender) = default;
-    void send_package(void){}
-    std::optional<Package>& get_sending_buffer(void) { return bufor_; };
+
+    std::optional<Package>& get_sending_buffer() { return bufor_; };
+    void send_package();
 
 protected:
     void push_package(Package&& package) { bufor_.emplace(package.get_id()); };
@@ -91,14 +85,13 @@ private:
 
 
 
-//@TODO: (Maria) Wiem w czym był problem - teraz powinno działać
 class Ramp: public PackageSender
 {
 public:
     Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
     void deliver_goods(Time t);
-    TimeOffset get_delivery_interval(void) { return di_; };
-    ElementID get_id(void) { return id_; };
+    TimeOffset get_delivery_interval() { return di_; };
+    ElementID get_id() { return id_; };
 
 private:
     ElementID id_;
@@ -107,15 +100,16 @@ private:
 };
 
 
-//@TODO: (Maria) Udało mi się to naprawić.
+
+
 class Worker: public PackageSender, public IPackageReceiver
 {
 public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q): PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
 
-    TimeOffset get_processing_duration(void) const { return pd_; };
-    Time get_package_processing_start_time(void) const { return start_t_; };
+    TimeOffset get_processing_duration() const { return pd_; };
+    Time get_package_processing_start_time() const { return start_t_; };
 
     void receive_package(Package&& p) override {q_->push(std::move(p));}
 
@@ -127,11 +121,11 @@ public:
     IPackageQueue::const_iterator end() const override { return q_ -> cend(); }
 
 
-    ReceiverType get_receiver_type() { return ReceiverType::WORKER; }
+    ReceiverType get_receiver_type() const override {return ReceiverType::WORKER;}
 
 private:
     ElementID id_;
-    TimeOffset  pd_;
+    TimeOffset pd_;
     Time start_t_;
     std::unique_ptr<IPackageQueue> q_;
     std::optional<Package> bufor_ = std::nullopt;
@@ -141,7 +135,6 @@ private:
 class Storehouse: public IPackageReceiver
 {
 public:
-    //TODO: Ogarnąć to z wersją Marysi
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id) {d_ = std::move(d);};
 
     IPackageStockpile::const_iterator begin() const override {return d_->begin();}
@@ -151,6 +144,7 @@ public:
 
     void receive_package(Package&& p) override {d_->push(std::move(p));}
     ElementID get_id() const override {return id_;}
+    ReceiverType get_receiver_type() const override {return ReceiverType::STOREHOUSE;}
 
 private:
     ElementID id_;
