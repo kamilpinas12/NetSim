@@ -15,7 +15,7 @@ set(SOURCE_FILES
         src/package.cpp
         src/nodes.cpp
         src/helpers.cpp
-        )
+        src/factory.cpp)
 
 
 
@@ -30,7 +30,9 @@ set(SOURCES_FILES_TESTS
         test/test_package.cpp
         #test/test_reports.cpp
         #test/test_simulate.cpp
-        test/test_storage_types.cpp)
+        test/test_storage_types.cpp
+        #include/factory.hpp
+        )
 
 set(EXEC_TEST ${PROJECT_ID}__test)
 add_executable(${EXEC_TEST} ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
