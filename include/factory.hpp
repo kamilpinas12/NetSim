@@ -31,7 +31,7 @@ public:
 
     void add(T&&  node) {collection_.insert(std::move(node));}
 
-    //TODO: metody remove_by_id i find_by_id
+    //TODO: metody remove_by_id i find_by_id (Kamil)
     void remove_by_id(ElementID id);
     iterator find_by_id(ElementID id);
     //const_iterator  find_by_id const (Element id);
@@ -53,7 +53,7 @@ public:
     //TODO: Sprawdzenie spójności (Filip)
     bool is_consistent() const;
 
-    //TODO: Metody wykonujące przekazania
+    //TODO: Metody wykonujące przekazania (Kamil)
     void do_delivery(Time t);
     void do_package_passing();
     void do_work(Time t);
