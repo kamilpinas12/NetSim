@@ -55,7 +55,7 @@ private:
 
 class Factory{
 public:
-    // TODO: Zrealizować funkcjonalności Rampy, Workera i Storehouse
+    // TODO: Zrealizować funkcjonalności Rampy, Workera i Storehouse (Maria)
     void add_ramp(Ramp&& ramp);
     void remove_ramp(ElementID id);
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id);
