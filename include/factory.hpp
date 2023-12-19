@@ -67,9 +67,9 @@ public:
     void do_delivery(Time t);
     void do_package_passing();
     void do_work(Time t);
+
 private:
 
-    //nie jestem czy tak to powinno wyglądać (Kamil)
     template <class Node>
     void remove_receiver(NodeCollection<Node>& collection, ElementID id);
 

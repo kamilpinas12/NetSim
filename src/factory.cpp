@@ -31,5 +31,11 @@ void Factory::do_package_passing() {
 template <class Node>
 void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id)
 {
-
+    auto& it = collection.find_by_id(id);
+    for(auto& worker : worker_){
+        worker.receiver_preferences_.remove_receiver(it);
+    }
+    for(auto& ramp : ramp_){
+        ramp.receiver_preferences_.remove_receiver(it);
+    }
 }
