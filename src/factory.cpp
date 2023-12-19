@@ -12,11 +12,13 @@ void Factory::do_work(Time t) {
     }
 }
 
+
 void Factory::do_delivery(Time t) {
     for (auto& ramp : ramp_){
         ramp.deliver_goods(t);
     }
 }
+
 
 void Factory::do_package_passing() {
     for (auto& worker : worker_){
@@ -28,10 +30,11 @@ void Factory::do_package_passing() {
     }
 }
 
+
 template <class Node>
 void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id)
 {
-    auto& it = collection.find_by_id(id);
+    auto it = &(*collection.find_by_id(id));
     for(auto& worker : worker_){
         worker.receiver_preferences_.remove_receiver(it);
     }
@@ -39,3 +42,4 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id)
         ramp.receiver_preferences_.remove_receiver(it);
     }
 }
+
