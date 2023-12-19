@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Wno-error=pessimizing-move)
 
-add_compile_definitions(EXERCISE_ID=2)
+add_compile_definitions(EXERCISE_ID=3)
 
 include_directories(include)
 set(SOURCE_FILES
