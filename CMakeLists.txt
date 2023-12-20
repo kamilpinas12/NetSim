@@ -31,7 +31,6 @@ set(SOURCES_FILES_TESTS
         #test/test_reports.cpp
         #test/test_simulate.cpp
         test/test_storage_types.cpp
-        #include/factory.hpp
         test/test_Factory.cpp)
 
 set(EXEC_TEST ${PROJECT_ID}__test)
