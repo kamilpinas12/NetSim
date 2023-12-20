@@ -53,7 +53,7 @@ public:
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
     IPackageReceiver* choose_receiver();
-    preferences_t& get_preferences() {return preferences_;};
+    const preferences_t& get_preferences() const {return preferences_;};
 
 private:
     preferences_t preferences_;
@@ -90,7 +90,7 @@ class Ramp: public PackageSender
 public:
     Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
     void deliver_goods(Time t);
-    TimeOffset get_delivery_interval() { return di_; };
+    TimeOffset get_delivery_interval() const { return di_; };
     ElementID get_id() const { return id_; };
 
 private:
@@ -110,10 +110,10 @@ public:
 
     TimeOffset get_processing_duration() const { return pd_; };
     Time get_package_processing_start_time() const { return start_t_; };
-
     void receive_package(Package&& p) override {q_->push(std::move(p));}
-
     ElementID get_id() const override { return id_; }
+    ReceiverType get_receiver_type() const override {return ReceiverType::WORKER;}
+    IPackageQueue* get_queue() const {return &*q_;}
 
     IPackageQueue::const_iterator cbegin() const override { return q_ -> cbegin(); }
     IPackageQueue::const_iterator cend() const override { return q_ -> cend(); }
@@ -121,7 +121,7 @@ public:
     IPackageQueue::const_iterator end() const override { return q_ -> cend(); }
 
 
-    ReceiverType get_receiver_type() const override {return ReceiverType::WORKER;}
+
 
 private:
     ElementID id_;

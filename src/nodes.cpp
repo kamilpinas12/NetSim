@@ -45,8 +45,6 @@ IPackageReceiver* ReceiverPreferences::choose_receiver() {
 
 
 
-// (Kamil) funkcje do zweryfikowania bo nie wiem na 100% czy o to chodzi
-
 
 void Worker::do_work(Time t) {
     // jeśli bufor jest pusty i jest coś w kolejce to przenieś package
