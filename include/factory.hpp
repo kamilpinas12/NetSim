@@ -5,12 +5,17 @@
 #ifndef LAB_NETSIM_FACTORY_HPP
 #define LAB_NETSIM_FACTORY_HPP
 
+#include <istream>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
+
+
 #include "types.hpp"
 #include "storage_types.hpp"
 #include "nodes.hpp"
 #include "package.hpp"
-
-
 
 
 template <class Node>
@@ -24,11 +29,9 @@ public:
     const_iterator end() const {return collection_.end();}
     const_iterator cbegin() const {return collection_.cbegin();}
     const_iterator cend() const {return collection_.cend();}
-
     iterator begin() {return collection_.begin();}
     iterator end() {return collection_.end();}
-    iterator cbegin() {return collection_.cbegin();}
-    iterator cend() {return collection_.cend();}
+
 
     void add(Node&& node) {collection_.emplace_back(std::move(node));}
 
@@ -62,22 +65,28 @@ public:
     void remove_ramp(ElementID id){ramp_.remove_by_id(id);}
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id){ return ramp_.find_by_id(id);}
     NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const {return ramp_.find_by_id(id);}
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const{return ramp_.cbegin();}
+    NodeCollection<Ramp>::const_iterator ramp_cend() const{return ramp_.cend();}
 
     void add_storehouse(Storehouse&& storehouse){storehouse_.add(std::move(storehouse));}
     void remove_storehouse(ElementID id){remove_receiver(storehouse_, id); storehouse_.remove_by_id(id);}
     NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id){ return storehouse_.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const {return storehouse_.find_by_id(id);}
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const{return storehouse_.cbegin();}
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const{return storehouse_.cend();}
 
     void add_worker(Worker&& worker){worker_.add(std::move(worker));}
     void remove_worker(ElementID id){remove_receiver(worker_, id); worker_.remove_by_id(id);}
     NodeCollection<Worker>::iterator find_worker_by_id(ElementID id){ return worker_.find_by_id(id);}
     NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const {return worker_.find_by_id(id);}
+    NodeCollection<Worker>::const_iterator worker_cbegin() const{return worker_.cbegin();}
+    NodeCollection<Worker>::const_iterator worker_cend() const{return worker_.cend();}
 
 
 
-    // ...
     //TODO: Sprawdzenie spójności (Filip)
     // ZMIEŃ !!! return 1 dodane tylko aby nie wywalało błędu
+
     bool is_consistent() const;
 
     //TODO: Metody wykonujące przekazania (Kamil)
@@ -104,6 +113,11 @@ private:
     NodeCollection<Worker> worker_;
     NodeCollection<Ramp> ramp_;
 };
+
+
+Factory load_factory_structure(std::istream& is);
+void save_factory_structure(Factory& factory, std::ostream& os);
+
 
 
 
