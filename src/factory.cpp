@@ -3,43 +3,25 @@
 //
 
 #include "factory.hpp"
-
+#include <algorithm>
 
 
 void Factory::do_work(Time t) {
-    for (auto& worker : worker_){
-        worker.do_work(t);
-    }
+    std::for_each(worker_.begin(), worker_.end(),
+                  [t](auto &elem){elem.do_work(t);});
 }
 
 
 void Factory::do_delivery(Time t) {
-    for (auto& ramp : ramp_){
-        ramp.deliver_goods(t);
-    }
+    std::for_each(ramp_.begin(), ramp_.end(),
+                  [t](auto &elem){elem.deliver_goods(t);});
 }
 
 
 void Factory::do_package_passing() {
-    for (auto& worker : worker_){
-        worker.send_package();
-    }
+    std::for_each(worker_.begin(), worker_.end(),
+                  [](auto &elem){elem.send_package();});
 
-    for (auto& ramp : ramp_){
-        ramp.send_package();
-    }
+    std::for_each(ramp_.begin(), ramp_.end(),
+                  [](auto &elem){elem.send_package();});
 }
-
-
-template <class Node>
-void Factory::remove_receiver(NodeCollection<Node>& collection, ElementID id)
-{
-    auto it = &(*collection.find_by_id(id));
-    for(auto& worker : worker_){
-        worker.receiver_preferences_.remove_receiver(it);
-    }
-    for(auto& ramp : ramp_){
-        ramp.receiver_preferences_.remove_receiver(it);
-    }
-}
-
