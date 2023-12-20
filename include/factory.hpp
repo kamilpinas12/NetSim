@@ -78,7 +78,7 @@ public:
     // ...
     //TODO: Sprawdzenie spójności (Filip)
     // ZMIEŃ !!! return 1 dodane tylko aby nie wywalało błędu
-    bool is_consistent() const{return 1;};
+    bool is_consistent() const;
 
     //TODO: Metody wykonujące przekazania (Kamil)
     void do_delivery(Time t);

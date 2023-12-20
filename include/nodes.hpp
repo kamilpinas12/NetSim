@@ -54,9 +54,9 @@ public:
     void remove_receiver(IPackageReceiver* r);
     IPackageReceiver* choose_receiver();
     preferences_t& get_preferences() {return preferences_;};
-
-private:
+    // Potrzebowałem zrobić to zmienną publiczną aby mieć dostęp podczas sprawdzania cykliczności
     preferences_t preferences_;
+private:
     ProbabilityGenerator probability_generator_;
 };
 
