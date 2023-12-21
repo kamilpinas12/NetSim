@@ -145,7 +145,7 @@ TEST(FactoryIOTest, LoadAndSaveTest) {
     std::string w1 = "WORKER id=1 processing-time=2 queue-type=FIFO";
     std::string w2 = "WORKER id=2 processing-time=1 queue-type=LIFO";
     std::string s1 = "STOREHOUSE id=1";
-    std::string l1 = "LINK src=ramp-1 dest=worker-1";
+    std::string l1 = "LINK src=ramp-1 dest=worker-1"; //
     std::string l2 = "LINK src=ramp-2 dest=worker-1";
     std::string l3 = "LINK src=ramp-2 dest=worker-2";
     std::string l4 = "LINK src=worker-1 dest=worker-1";
