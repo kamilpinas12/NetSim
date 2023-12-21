@@ -56,8 +56,8 @@ public:
 
     const preferences_t& get_preferences() const {return preferences_;};
 
-    preferences_t preferences_;
 private:
+    preferences_t preferences_;
     ProbabilityGenerator probability_generator_;
 };
 
