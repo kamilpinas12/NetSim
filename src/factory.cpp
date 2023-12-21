@@ -5,7 +5,7 @@
 #include "factory.hpp"
 #include <algorithm>
 #include <stdexcept>
-
+#include <map>
 
 void Factory::do_work(Time t) {
     std::for_each(worker_.begin(), worker_.end(),
@@ -82,3 +82,49 @@ bool Factory::is_consistent() const {
     }
     return true;
 }
+
+
+
+void add_links(std::ostream& os, ReceiverPreferences preferences){
+
+}
+
+
+void save_factory_structure(Factory& factory, std::ostream& os){
+    // ramp label "== LOADING RAMPS ==";
+    // worker label  "== WORKERS ==";
+    // storehouse label "== STOREHOUSES ==";
+    os << std::endl << "== LOADING RAMPS ==" << std::endl << std::endl;
+    // zamiana na mapę żeby posortować według id
+    std::map<ElementID, const Ramp*> ramps;
+    for(auto ramp = factory.ramp_cbegin(); ramp != factory.ramp_cend(); ramp ++){
+        ramps.insert(std::make_pair(ramp->get_id(), &*ramp));
+    }
+    for(auto ramp : ramps){
+        os << "LOADING RAMP #" << ramp.first << std::endl;
+        os << "  Delivery interval: " << ramp.second->get_delivery_interval() << std::endl;
+        os << "  Receivers:" << std::endl;
+        add_links(os, ramp.second->receiver_preferences_);
+        os << "\n";
+    }
+    os << "\n\n";
+
+    os << std::endl << "== WORKERS ==" << std::endl << std::endl;
+    std::map<ElementID, const Worker*> workers;
+    for(auto worker = factory.worker_cbegin(); worker != factory.worker_cend(); worker++){
+        workers.insert(std::make_pair(worker->get_id(), &*worker));
+    }
+    for(auto worker : workers){
+        os << "WORKER #" << worker.first << std::endl;
+        os << "  Processing time: " << worker.second->get_processing_duration() << std::endl;
+//        os << "  Queue type: " << (worker.second->get_receiver_type() == PackageQueueType::FIFO) ? "FIFO" : "LIFO" << std::endl;
+//        os << "  Receivers:" << std::endl;
+//        add_links(os, ramp.second->receiver_preferences_);
+//        os << "\n";
+    }
+    os << "\n\n";
+
+
+
+}
+
