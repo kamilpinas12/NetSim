@@ -39,11 +39,11 @@ enum class NodeColor { UNVISITED, VISITED, VERIFIED };
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors){
     if (node_colors[sender] == NodeColor::VISITED) {return true;}
     node_colors[sender]  = NodeColor::VISITED;
-    if ((sender->receiver_preferences_).preferences_.empty()){
+    if ((sender->receiver_preferences_).get_preferences().empty()){
         throw std::logic_error("Nadawca nie ma zddefiniowanych odbiorców");
     }
     bool has_reciver = false;
-    for (auto& [receiver, p]: sender->receiver_preferences_.preferences_){
+    for (auto& [receiver, p]: sender->receiver_preferences_.get_preferences()){
         if (receiver->get_receiver_type() == ReceiverType::STOREHOUSE){
             has_reciver = true;
         }else{
@@ -86,6 +86,53 @@ bool Factory::is_consistent() const {
         return false;
     }
     return true;
+}
+
+
+void save_factory_structure(Factory& factory, std::ostream& os){
+    // saving ramps
+    os << std::endl << " == LOADING RAMPS ==" << std::endl;
+    auto ramp = [&os] (const Ramp& r){
+        os << std::endl<< "LOADING_RAMP " << r.get_id();
+        os << "delivery-interval=" << r.get_delivery_interval();
+    };
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(),ramp);
+
+    // saving Worker
+    os << std::endl << std::endl << " == WORKER ==" << std::endl;
+    auto worker = [&os] (const Worker& w){
+        os << std::endl<< "LOADING_RAMP id=" << w.get_id();
+        os << "processing-time=" << w.get_processing_duration();
+        os << "queue-type=" << w.get_queue();
+    };
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(),worker);
+
+    // saving storehouse
+    os << std::endl << std::endl << " == STOREHOUSE ==" << std::endl;
+    auto storehouse = [&os] (const Storehouse& s){
+        os << std::endl << "STOREHOUSE id=" << s.get_id();
+    };
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), storehouse);
+
+    // saving links
+    os <<std::endl << std::endl << " == LINKS ==" << std::endl;
+    // links from ramp to worker
+    auto ramp_to = [&os] (const Ramp& r){
+        for (auto& receiver: r.receiver_preferences_.get_preferences())
+            os << std::endl << "LINK src=ramp-" << r.get_id() << "dest=worker-" << receiver.first;
+    };
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cbegin(), ramp_to);
+    // links from worker
+    auto worker_to = [&os](const Worker& w){
+        for (auto& receiver: w.receiver_preferences_.get_preferences()){
+            if (receiver.first->get_receiver_type() == ReceiverType::WORKER){
+                os << std::endl << "LINK src=worker-" << w.get_id() << "dest=worker-" << receiver.first;
+            } else if (receiver.first->get_receiver_type() == ReceiverType::STOREHOUSE){
+                os << std::endl << "LINK src=worker-" << w.get_id() << "dest=store-" << receiver.first;
+            }
+        }
+    };
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(), worker_to);
 }
 
 
@@ -197,7 +244,4 @@ Factory load_factory_structure(std::istream& is) {
 }
 
 
-void save_factory_structure(Factory& factory, std::ostream& os){
-    os << "XD";
-    factory.is_consistent();
-}
+
