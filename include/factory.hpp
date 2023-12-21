@@ -12,6 +12,7 @@
 #include <vector>
 
 
+
 #include "types.hpp"
 #include "storage_types.hpp"
 #include "nodes.hpp"
@@ -35,7 +36,7 @@ public:
 
     void add(Node&& node) {collection_.emplace_back(std::move(node));}
 
-    //TODO: metody remove_by_id i find_by_id (Kamil)
+
     void remove_by_id(ElementID id){
         auto it = find_by_id(id);
         if(it != collection_.end()) collection_.erase(it);
@@ -60,7 +61,7 @@ private:
 
 class Factory{
 public:
-    // TODO: Zrealizować funkcjonalności Rampy, Workera i Storehouse (Kamil)
+
     void add_ramp(Ramp&& ramp){ramp_.add(std::move(ramp));}
     void remove_ramp(ElementID id){ramp_.remove_by_id(id);}
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id){ return ramp_.find_by_id(id);}
@@ -83,13 +84,8 @@ public:
     NodeCollection<Worker>::const_iterator worker_cend() const{return worker_.cend();}
 
 
-
-    //TODO: Sprawdzenie spójności (Filip)
-    // ZMIEŃ !!! return 1 dodane tylko aby nie wywalało błędu
-
     bool is_consistent() const;
 
-    //TODO: Metody wykonujące przekazania (Kamil)
     void do_delivery(Time t);
     void do_package_passing();
     void do_work(Time t);
