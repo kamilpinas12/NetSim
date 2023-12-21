@@ -39,11 +39,11 @@ enum class NodeColor { UNVISITED, VISITED, VERIFIED };
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors){
     if (node_colors[sender] == NodeColor::VISITED) {return true;}
     node_colors[sender]  = NodeColor::VISITED;
-    if ((sender->receiver_preferences_).preferences_.empty()){
+    if ((sender->receiver_preferences_).get_preferences().empty()){
         throw std::logic_error("Nadawca nie ma zddefiniowanych odbiorców");
     }
     bool has_reciver = false;
-    for (auto& [receiver, p]: sender->receiver_preferences_.preferences_){
+    for (auto& [receiver, p]: sender->receiver_preferences_.get_preferences()){
         if (receiver->get_receiver_type() == ReceiverType::STOREHOUSE){
             has_reciver = true;
         }else{
