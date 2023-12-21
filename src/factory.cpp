@@ -7,6 +7,11 @@
 #include <stdexcept>
 
 
+enum class ElementType {
+    RAMP, WORKER, STOREHOUSE, LINK
+};
+
+
 void Factory::do_work(Time t) {
     std::for_each(worker_.begin(), worker_.end(),
                   [t](auto &elem){elem.do_work(t);});
@@ -81,4 +86,118 @@ bool Factory::is_consistent() const {
         return false;
     }
     return true;
+}
+
+
+typedef struct {
+    ElementType element_type;
+    std::map<std::string, std::string> parameters;
+} ParsedLineData;
+
+ParsedLineData parse_line(std::string line) {
+    ParsedLineData obj;
+
+    std::vector<std::string> tokens;
+    std::string token;
+
+    std::istringstream token_stream(line);
+    char delimiter = ' ';
+
+    while (std::getline(token_stream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    if (tokens[0] == "LOADING_RAMP") obj.element_type = ElementType::RAMP;
+    if (tokens[0] == "WORKER") obj.element_type = ElementType::WORKER;
+    if (tokens[0] == "STOREHOUSE") obj.element_type = ElementType::STOREHOUSE;
+    if (tokens[0] == "LINK") obj.element_type = ElementType::LINK;
+
+    char equal = '=';
+    std::string t;
+    for (auto i = tokens.begin() + 1; i != tokens.end(); i++) {
+        std::istringstream tok_s(*i);
+        std::vector<std::string> v;
+        while (std::getline(tok_s, t, equal)) {
+            v.push_back(t);
+        }
+        obj.parameters.insert(std::make_pair(v[0], v[1]));
+    }
+
+    return obj;
+}
+
+
+Factory load_factory_structure(std::istream& is) {
+    Factory factory;
+
+    std::string line;
+    while(std::getline(is, line)) {
+        if (not line.empty() or not line.find(";", 0)) {
+            auto par = parse_line(line);
+
+            if (par.element_type == ElementType::RAMP) {
+                factory.add_ramp(Ramp(std::stoi(par.parameters["id"]), std::stoi(par.parameters["delivery-interval"])));
+            }
+
+            else if (par.element_type == ElementType::WORKER) {
+                if (par.parameters["queue-type"] == "FIFO")  {
+                    factory.add_worker(Worker(std::stoi(par.parameters["id"]), std::stoi(par.parameters["processing-time"]), std::make_unique<PackageQueue>(PackageQueueType::FIFO)));
+                }
+
+                else if (par.parameters["queue-type"] == "LIFO")  {
+                    factory.add_worker(Worker(std::stoi(par.parameters["id"]), std::stoi(par.parameters["processing-time"]), std::make_unique<PackageQueue>(PackageQueueType::LIFO)));
+                }
+            }
+
+            else if (par.element_type == ElementType::STOREHOUSE) {
+                factory.add_storehouse(Storehouse(std::stoi(par.parameters["id"])));
+            }
+
+            else if (par.element_type == ElementType::LINK) {
+                std::vector<std::string> src;
+                std::vector<std::string> dest;
+                std::string token;
+                std::istringstream token_src(par.parameters["src"]);
+                while (std::getline(token_src, token, '-')) {
+                    src.push_back(token);
+                }
+
+                std::istringstream token_dest(par.parameters["dest"]);
+                while (std::getline(token_dest, token, '-')) {
+                    dest.push_back(token);
+                }
+
+
+                if(src[0] == "worker" && dest[0] == "store"){
+                    auto obj_src = factory.find_worker_by_id(std::stoi(src[1]));
+                    auto obj_dest = factory.find_storehouse_by_id(std::stoi(dest[1]));
+                    obj_src->receiver_preferences_.add_receiver(&*obj_dest);
+                }
+                else if(src[0] == "ramp" && dest[0] == "worker"){
+                    auto obj_src = factory.find_ramp_by_id(std::stoi(src[1]));
+                    auto obj_dest = factory.find_worker_by_id(std::stoi(dest[1]));
+                    obj_src->receiver_preferences_.add_receiver(&*obj_dest);
+                }
+                else if(src[0] == "worker" && dest[0] == "worker"){
+                    auto obj_src = factory.find_worker_by_id(std::stoi(src[1]));
+                    auto obj_dest = factory.find_worker_by_id(std::stoi(dest[1]));
+                    obj_src->receiver_preferences_.add_receiver(&*obj_dest);
+                }
+                else if(src[0] == "ramp" && dest[0] == "store"){
+                    auto obj_src = factory.find_ramp_by_id(std::stoi(src[1]));
+                    auto obj_dest = factory.find_storehouse_by_id(std::stoi(dest[1]));
+                    obj_src->receiver_preferences_.add_receiver(&*obj_dest);
+                }
+
+                }
+            }
+        }
+
+    return factory;
+}
+
+
+void save_factory_structure(Factory& factory, std::ostream& os){
+    os << "XD";
+    factory.is_consistent();
 }
