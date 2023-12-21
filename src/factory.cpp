@@ -179,7 +179,7 @@ Factory load_factory_structure(std::istream& is) {
 
     std::string line;
     while(std::getline(is, line)) {
-        if (not line.empty() or not line.find(";", 0)) {
+        if (!line.empty() && line[0] != ';') {
             auto par = parse_line(line);
 
             if (par.element_type == ElementType::RAMP) {
