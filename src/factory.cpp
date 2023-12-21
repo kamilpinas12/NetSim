@@ -6,9 +6,11 @@
 #include <algorithm>
 #include <stdexcept>
 
+
 enum class ElementType {
     RAMP, WORKER, STOREHOUSE, LINK
 };
+
 
 void Factory::do_work(Time t) {
     std::for_each(worker_.begin(), worker_.end(),
@@ -37,11 +39,11 @@ enum class NodeColor { UNVISITED, VISITED, VERIFIED };
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors){
     if (node_colors[sender] == NodeColor::VISITED) {return true;}
     node_colors[sender]  = NodeColor::VISITED;
-    if ((sender->receiver_preferences_).get_preferences().empty()){
+    if ((sender->receiver_preferences_).preferences_.empty()){
         throw std::logic_error("Nadawca nie ma zddefiniowanych odbiorców");
     }
     bool has_reciver = false;
-    for (auto& [receiver, p]: sender->receiver_preferences_.get_preferences()){
+    for (auto& [receiver, p]: sender->receiver_preferences_.preferences_){
         if (receiver->get_receiver_type() == ReceiverType::STOREHOUSE){
             has_reciver = true;
         }else{
@@ -85,6 +87,7 @@ bool Factory::is_consistent() const {
     }
     return true;
 }
+
 
 typedef struct {
     ElementType element_type;
@@ -197,8 +200,4 @@ Factory load_factory_structure(std::istream& is) {
 void save_factory_structure(Factory& factory, std::ostream& os){
     os << "XD";
     factory.is_consistent();
-}
-
-
-
 }
