@@ -93,17 +93,20 @@ void save_factory_structure(Factory& factory, std::ostream& os){
     // saving ramps
     os << std::endl << " == LOADING RAMPS ==" << std::endl;
     auto ramp = [&os] (const Ramp& r){
-        os << std::endl<< "LOADING_RAMP " << r.get_id();
-        os << "delivery-interval=" << r.get_delivery_interval();
+        os << std::endl<< "LOADING_RAMP id=" << r.get_id();
+        os << " delivery-interval=" << r.get_delivery_interval();
     };
     std::for_each(factory.ramp_cbegin(), factory.ramp_cend(),ramp);
 
     // saving Worker
     os << std::endl << std::endl << " == WORKER ==" << std::endl;
     auto worker = [&os] (const Worker& w){
-        os << std::endl<< "LOADING_RAMP id=" << w.get_id();
-        os << "processing-time=" << w.get_processing_duration();
-        os << "queue-type=" << w.get_queue();
+        os << std::endl<< "WORKER id=" << w.get_id();
+        os << " processing-time=" << w.get_processing_duration();
+        std::string s;
+        if(w.get_queue()->get_queue_type() == PackageQueueType::FIFO) s = "FIFO";
+        else s = "LIFO";
+        os << " queue-type=" << s;
     };
     std::for_each(factory.worker_cbegin(), factory.worker_cend(),worker);
 
@@ -114,21 +117,23 @@ void save_factory_structure(Factory& factory, std::ostream& os){
     };
     std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), storehouse);
 
+
+
     // saving links
     os <<std::endl << std::endl << " == LINKS ==" << std::endl;
     // links from ramp to worker
     auto ramp_to = [&os] (const Ramp& r){
         for (auto& receiver: r.receiver_preferences_.get_preferences())
-            os << std::endl << "LINK src=ramp-" << r.get_id() << "dest=worker-" << receiver.second;
+            os << std::endl << "LINK src=ramp-" << r.get_id() << " dest=worker-" << receiver.first->get_id();
     };
-    std::for_each(factory.ramp_cbegin(), factory.ramp_cbegin(), ramp_to);
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), ramp_to);
     // links from worker
     auto worker_to = [&os](const Worker& w){
         for (auto& receiver: w.receiver_preferences_.get_preferences()){
             if (receiver.first->get_receiver_type() == ReceiverType::WORKER){
-                os << std::endl << "LINK src=worker-" << w.get_id() << "dest=worker-" << receiver.second;
+                os << std::endl << "LINK src=worker-" << w.get_id() << " dest=worker-" << receiver.first->get_id();
             } else if (receiver.first->get_receiver_type() == ReceiverType::STOREHOUSE){
-                os << std::endl << "LINK src=worker-" << w.get_id() << "dest=store-" << receiver.second;
+                os << std::endl << "LINK src=worker-" << w.get_id() << " dest=store-" << receiver.first->get_id();
             }
         }
     };
