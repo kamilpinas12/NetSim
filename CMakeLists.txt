@@ -15,11 +15,13 @@ set(SOURCE_FILES
         src/package.cpp
         src/nodes.cpp
         src/helpers.cpp
-        src/factory.cpp)
+        src/factory.cpp
+        src/reports.cpp
+        )
 
 
 
-add_executable(lab_netsim ${SOURCE_FILES} main.cpp )
+add_executable(lab_netsim ${SOURCE_FILES} main.cpp src/reports.cpp)
 # == Unit testing using Google Testing Framework ==
 
 set(SOURCES_FILES_TESTS
@@ -28,7 +30,7 @@ set(SOURCES_FILES_TESTS
         test/test_factory_io.cpp
         test/test_nodes.cpp
         test/test_package.cpp
-        #test/test_reports.cpp
+        test/test_reports.cpp
         #test/test_simulate.cpp
         test/test_storage_types.cpp
         test/test_Factory.cpp
