@@ -13,7 +13,7 @@
 class Package{
 public:
     Package();
-    explicit Package(ElementID id) : id_(id) {assigned_IDs.insert(id);}
+    Package(ElementID id) : id_(id) {assigned_IDs.insert(id);}
     Package(Package &&package) noexcept : id_(package.id_) {}
 
     Package& operator=(Package&& package);

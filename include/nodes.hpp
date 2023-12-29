@@ -72,7 +72,7 @@ public:
     PackageSender() = default;
     PackageSender(PackageSender&& pack_sender) = default;
 
-    std::optional<Package>& get_sending_buffer() { return bufor_; };
+    const std::optional<Package>& get_sending_buffer() const { return bufor_; };
     void send_package();
 
 protected:
@@ -121,7 +121,7 @@ public:
     IPackageQueue::const_iterator begin() const override { return q_ -> cbegin(); }
     IPackageQueue::const_iterator end() const override { return q_ -> cend(); }
 
-
+    const std::optional<Package>& get_processing_buffer() const {return bufor_;}
 
 
 private:
@@ -146,6 +146,8 @@ public:
     void receive_package(Package&& p) override {d_->push(std::move(p));}
     ElementID get_id() const override {return id_;}
     ReceiverType get_receiver_type() const override {return ReceiverType::STOREHOUSE;}
+
+    IPackageStockpile* get_queue() const {return &*d_;}
 
 private:
     ElementID id_;
