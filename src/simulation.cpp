@@ -3,8 +3,8 @@
 //
 #include "factory.hpp"
 
-void simulate(Factory factory, Time t, std::function<void (Factory&, Time)> do_report){
-    if (factory.is_consistent()){
+void simulate(Factory& factory, Time t, std::function<void (Factory&, Time)> do_report){
+    if (!factory.is_consistent()){
         throw std::logic_error("Funkcja jest niespójna");
     }
     for (Time i = 0; i < t; i++) {
