@@ -17,6 +17,7 @@ set(SOURCE_FILES
         src/helpers.cpp
         src/factory.cpp
         src/reports.cpp
+        src/simulation.cpp
         )
 
 
@@ -35,7 +36,7 @@ set(SOURCES_FILES_TESTS
         test/test_storage_types.cpp
         test/test_Factory.cpp
         test/test_factory_io.cpp
-        src/simulation.cpp)
+        )
 
 set(EXEC_TEST ${PROJECT_ID}__test)
 add_executable(${EXEC_TEST} ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
