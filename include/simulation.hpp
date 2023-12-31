@@ -24,4 +24,6 @@ private:
     std::set<Time> turns_;
 };
 
+void simulate(Factory factory, Time t, std::function<void (Factory&, Time)> do_report);
+
 #endif //LAB_NETSIM_SIMULATION_HPP
