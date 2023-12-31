@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -Wno-error=pessimizing-move)
 
-add_compile_definitions(EXERCISE_ID=3)
+add_compile_definitions(EXERCISE_ID=5)
 
 include_directories(include)
 set(SOURCE_FILES
@@ -31,7 +31,7 @@ set(SOURCES_FILES_TESTS
         test/test_nodes.cpp
         test/test_package.cpp
         test/test_reports.cpp
-        #test/test_simulate.cpp
+        test/test_simulate.cpp
         test/test_storage_types.cpp
         test/test_Factory.cpp
         test/test_factory_io.cpp
