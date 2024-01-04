@@ -10,8 +10,6 @@
 
 //funkcja pomocnicza do generate_structure_report
 void print_receivers(std::ostream& os, ReceiverPreferences preferences){
-    // sortowanie według typu (storehouse < worker) oraz
-    // według id (wstawienie id do std::set automatycznie sortuje)
 
     std::set<ElementID> workers;
     std::set<ElementID> stores;
@@ -22,11 +20,11 @@ void print_receivers(std::ostream& os, ReceiverPreferences preferences){
     }
 
     os << "  Receivers:" << std::endl;
-    for(ElementID worker_id : workers){
-        os << "    worker #" << worker_id << "\n";
-    }
     for(ElementID store_id : stores){
         os << "    storehouse #" << store_id << "\n";
+    }
+    for(ElementID worker_id : workers){
+        os << "    worker #" << worker_id << "\n";
     }
     os << std::endl;
 }
